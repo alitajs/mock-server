@@ -6,6 +6,7 @@ import logger from 'morgan';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import compression from 'compression';
 import cors from 'cors';
+import { winPath } from '@umijs/utils';
 import indexRouter from './routes/index';
 import { getMockData, matchMock } from './utils';
 
@@ -36,13 +37,11 @@ const ignore = [
   'node_modules/**',
   // ...(userConfig?.mock?.exclude || []),
 ];
-const { mockData,
-  mockPaths,
-  mockWatcherPaths, } = getMockData({
-    cwd: `${process.cwd()}/dist`,
-    ignore,
-    // registerBabel,
-  })
+const { mockData } = getMockData({
+  cwd: `${winPath(process.cwd())}/dist`,
+  ignore,
+  // registerBabel,
+})
 app.use((req, res, next) => {
   const match = mockData && matchMock(req, mockData);
   if (match) {
